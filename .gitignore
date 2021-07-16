@@ -5,3 +5,5 @@ baekjoon/.idea/modules.xml
 baekjoon/.idea/misc.xml
 baekjoon/.idea/inspectionProfiles/profiles_settings.xml
 baekjoon/.idea/baekjoon.iml
+*.json
+*.exe
