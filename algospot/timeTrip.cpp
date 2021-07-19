@@ -1,5 +1,6 @@
-#include <iostream>
-#include <vector>
+//timeTrip
+#include<iostream>
+#include<vector>
 using namespace std;
 
 const int MAX_V = 100;
@@ -13,106 +14,88 @@ int main()
     int tc; cin >> tc;
     while(tc--)
     {
-        int V, W;
+        int V,W;
         cin >> V >> W;
 
         vector<pair<int,int> > adj[MAX_V];
         for(int i = 0; i < W; i++)
         {
-            int u, v, c;
+            int u,v,c;
             cin >> u >> v >> c;
 
             adj[u].push_back(make_pair(v,c));
         }
 
-        // shortest BellmanFord
-        vector<int> upper(V, INF);
-        upper[0] = 0;
+        //bellmanFord - shortest path
+        vector<int> dist1(V, INF);
+        dist1[0] = 0;
 
-        bool updated = false;
-        for(int iter = 0; iter < V-1; iter++)
+        bool isUpdated = false;
+        for(int iter = 0; iter <= V; iter++)
         {
-            updated = false;
+            isUpdated = false;
+
             for(int here = 0; here < V; here++)
                 for(int i = 0; i < adj[here].size(); i++)
                 {
-                    int there = adj[here][i].first;
-                    int cost = adj[here][i].second;
+                    if(dist1[here] == INF) continue;
 
-                    if(upper[there] > upper[here] + cost)
+                    int there = adj[here][i].first;
+                    int nextDist = dist1[here] + adj[here][i].second;
+
+                    if(dist1[there] > nextDist)
                     {
-                        upper[there] = upper[here] + cost;
-                        updated = true;
+                        isUpdated = true;
+                        dist1[there] = nextDist;
                     }
                 }
-            
-            if(!updated) break;
+
+            if(!isUpdated) break;
+            if(iter == V && isUpdated) dist1.clear();
         }
 
-        int temp = upper[1];
-        for(int here = 0; here < V; here++)
-            for(int i = 0; i < adj[here].size(); i++)
-            {
-                int there = adj[here][i].first;
-                int cost = adj[here][i].second;
+        //bellmanFord - longest path
+        vector<int> dist2(V, -INF);
+        dist2[0] = 0;
 
-                if(upper[there] > upper[here] + cost)
-                {
-                    upper[there] = upper[here] + cost;
-                    updated = true;
-                }
-            }
-
-        if(upper[1] != temp) upper.clear();
-
-        // longest BellmanFord
-        vector<int> lower(V, -INF);
-        lower[0] = 0;
-
-        updated = false;
-        for(int iter = 0; iter < V-1; iter++)
+        isUpdated = false;
+        for(int iter = 0; iter <= V; iter++)
         {
-            updated = false;
+            isUpdated = false;
             for(int here = 0; here < V; here++)
                 for(int i = 0; i < adj[here].size(); i++)
                 {
-                    int there = adj[here][i].first;
-                    int cost = adj[here][i].second;
+                    if(dist2[here] == -INF) continue;
 
-                    if(lower[there] < lower[here] + cost)
+                    int there = adj[here][i].first;
+                    int nextDist = dist2[here] + adj[here][i].second;
+
+                    if(dist2[there] < nextDist)
                     {
-                        lower[there] = lower[here] + cost;
-                        updated = true;
+                        isUpdated = true;
+                        dist2[there] = nextDist;
                     }
                 }
-            
-            if(!updated) break;
+
+            if(!isUpdated) break;
+            if(iter == V && isUpdated) dist2.clear();
         }
 
-        temp = lower[1];
-        for(int here = 0; here < V; here++)
-            for(int i = 0; i < adj[here].size(); i++)
-            {
-                int there = adj[here][i].first;
-                int cost = adj[here][i].second;
 
-                if(lower[there] < lower[here] + cost)
-                {
-                    lower[there] = lower[here] + cost;
-                    updated = true;
-                }
-            }
-        if(lower[1] != temp) lower.clear();
+        if(dist1[1] == INF || dist2[1] == -INF)
+            cout << "UNREACHABLE\n";
+        else
+        {
+            if(dist1.empty()) cout << "INFINITY";
+            else cout << dist1[1];
 
-        bool isUnreachable = false;
-        const int M = V * 1000; // # of node * maxCost 
-        if(upper.empty()) cout << "INFINITY ";
-        else if(upper[1] >= INF - M) isUnreachable = true;
-        else cout << upper[1] << ' ';
+            cout << ' ';
 
-        if(lower.empty()) cout << "INFINITY\n";
-        else if(isUnreachable) cout << "UNREACHABLE\n";
-        else cout << lower[1] << "\n"; 
+            if(dist2.empty()) cout << "INFINITY";
+            else cout << dist2[1];
+
+            cout << '\n';
+        }
     }
 
     return 0;

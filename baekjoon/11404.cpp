@@ -43,4 +43,6 @@ int main()
             cout << (adj[i][j] == INF ? 0 : adj[i][j]) << ' ';
         cout << '\n';
     }
+
+    return 0;
 }
