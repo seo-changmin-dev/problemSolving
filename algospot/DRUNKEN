@@ -1,0 +1,61 @@
+//Drunken Driving
+#include<iostream>
+#include<vector>
+#include<algorithm>
+using namespace std;
+
+const int INF = 987654321;
+const int MAX_V = 500 + 10;
+
+int V,E;
+int main()
+{
+	ios::sync_with_stdio(false);
+	cin.tie(NULL);
+	
+	cin >> V >> E;
+	vector<int> cost(V);
+	for(int i = 0; i < V; i++)
+		cin >> cost[i];
+	
+	int adj[2][MAX_V][MAX_V];
+	for(int i = 0; i < 2; i++)
+		for(int j = 0; j < MAX_V; j++)
+			for(int k = 0; k < MAX_V; k++)
+				adj[0][j][k] = INF;
+
+	for(int i = 0; i < E; i++)
+	{
+		int u,v,c;
+		cin >> u >> v >> c;
+		u--; v--;
+		adj[0][u][v] = c;
+		adj[0][v][u] = c;
+	}
+	
+	for(int i = 0; i < 2; i++)
+		for(int j = 0; j < MAX_V; j++)
+				adj[i][j][j] = 0;
+	
+	for(int k = 0; k < V; k++)
+		for(int i = 0; i < V; i++)
+			for(int j = 0; j < V; j++)
+				adj[0][i][j] = min(adj[0][i][j], adj[0][i][k] + adj[0][k][j]);
+
+	for(int i = 0; i < V; i++)
+		for(int j = 0; j < V; j++)
+			for(int k = 0; k < V; k++)
+			{
+				if(i == k || j == k) continue;
+				else adj[1][i][j] = max(adj[1][i][j], adj[0][i][k] + cost[k] + adj[0][k][j]);
+			}
+	
+	int tc; cin >> tc;
+	while(tc--)
+	{
+		int src, dest;
+		cin >> src >> dest;
+		src--; dest--;
+		cout << adj[1][src][dest] << '\n';
+	}
+}
