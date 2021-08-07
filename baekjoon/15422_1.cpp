@@ -12,7 +12,7 @@ const int MAX_M = 150000;
 const int MAX_F = 1000;
 
 vector<pair<int,int> > adj[MAX_N];
-vector<int> flights[MAX_F];
+vector<int> flights[MAX_N];
 vector<vector<ll> > dist(MAX_N, vector<ll>(2, INF));
 
 int n,m,f,s,t;
@@ -20,6 +20,8 @@ int main()
 {
     ios::sync_with_stdio(false);
     cin.tie(NULL);
+
+    //freopen("tc/input.txt", "r", stdin);
 
     cin >> n >> m >> f >> s >> t;
     for(int i = 0; i < m; i++)
@@ -60,8 +62,10 @@ int main()
             if(dist[next][useFly] > nextDist)
             {
                 dist[next][useFly] = nextDist;
-                dist[next][1] = min(dist[next][1], nextDist);
                 pq.push({-nextDist, {next, useFly}});
+
+                if(useFly == 0)
+                    dist[next][1] = min(dist[next][1], nextDist);
             }
         }
 
@@ -71,6 +75,7 @@ int main()
             for(int i = 0; i < flights[curr].size(); i++)
             {
                 int next = flights[curr][i];
+
                 if(dist[next][1] > cost)
                 {
                     dist[next][1] = cost;
