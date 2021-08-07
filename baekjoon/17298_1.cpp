@@ -5,9 +5,9 @@
 #include<stack>
 using namespace std;
 
-typedef struct {
+typedef struct _Data{
     int val, idx;
-} datta;
+} Data;
 
 const int N_MAX = 1000000;
 int ans[N_MAX];
@@ -19,16 +19,16 @@ int main()
 
     int N; cin >> N;
     
-    stack<datta> stk;
+    stack<Data> stk;
     for(int i = 0; i < N; i++)
     {
-        datta next;
+        Data next;
         cin >> next.val;
         next.idx = i;
 
         while(!stk.empty())
         {
-            datta now = stk.top();
+            Data now = stk.top();
             if(now.val >= next.val) break;
             else
             {
@@ -41,7 +41,7 @@ int main()
 
     while(!stk.empty())
     {
-        datta now = stk.top();
+        Data now = stk.top();
         stk.pop();
         ans[now.idx] = -1;
     }
