@@ -8,3 +8,5 @@ baekjoon/.idea/baekjoon.iml
 *.json
 *.exe
 *.txt
+*.xml
+*.iml
